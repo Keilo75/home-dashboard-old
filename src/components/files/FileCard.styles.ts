@@ -7,4 +7,10 @@ export default createStyles((theme) => ({
       backgroundColor: theme.colors.dark[5],
     },
   },
+  preview: {
+    width: '100%',
+    display: 'grid',
+    placeItems: 'center',
+    backgroundColor: theme.colors.dark[5],
+  },
 }));
