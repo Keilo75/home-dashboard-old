@@ -2,8 +2,7 @@ import { AppProps } from 'next/app';
 import Head from 'next/head';
 import { MantineProvider } from '@mantine/core';
 import React from 'react';
-
-import { Navigation } from '../components/shared/navigation/Navigation';
+import { Navigation } from 'components/shared/navigation/Navigation';
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;

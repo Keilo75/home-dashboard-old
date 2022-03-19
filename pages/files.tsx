@@ -3,6 +3,9 @@ import {
   Button,
   Group,
   Progress,
+  Radio,
+  RadioGroup,
+  Select,
   Text,
   TextInput,
   Title,
@@ -11,25 +14,36 @@ import {
 import { IconSearch, IconX } from '@tabler/icons';
 import { GetServerSideProps } from 'next';
 import prettyBytes from 'pretty-bytes';
-import React, { useState } from 'react';
-import { maxFileSize } from '../constants';
+import React, { useMemo, useState } from 'react';
+import { File, maxFileSize } from 'models/file';
+import { getFiles } from 'lib/files/fileController';
+import FileCard from 'components/files/FileCard';
 
 interface Props {
+  files: File[];
   maxFileSize: number;
   currentFileSize: number;
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  return { props: { maxFileSize, currentFileSize: 0 } };
+  const files = await getFiles();
+  const currentFileSize = files.reduce((acc, cur) => acc + cur.size, 0);
+
+  return { props: { maxFileSize, currentFileSize, files } };
 };
 
-const Files: React.FC<Props> = ({ maxFileSize, currentFileSize }) => {
+const Files: React.FC<Props> = ({ maxFileSize, currentFileSize, files }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setSearchTerm(e.target.value);
   const clearSearchTerm = () => setSearchTerm('');
 
   const percentage = (currentFileSize / maxFileSize) * 100;
+  const filteredFiles = useMemo(
+    () => files.filter((file) => file.name.includes(searchTerm)),
+
+    [files, searchTerm]
+  );
 
   return (
     <>
@@ -37,7 +51,9 @@ const Files: React.FC<Props> = ({ maxFileSize, currentFileSize }) => {
         Files
       </Title>
       <Tooltip
-        label={`${prettyBytes(currentFileSize)} / ${prettyBytes(maxFileSize)}`}
+        label={`${prettyBytes(currentFileSize, {
+          binary: true,
+        })} / ${prettyBytes(maxFileSize, { binary: true })}`}
         withArrow
         gutter={0}
       >
@@ -49,15 +65,15 @@ const Files: React.FC<Props> = ({ maxFileSize, currentFileSize }) => {
           %
         </Text>
       </Tooltip>
-
       <Progress size="xl" mb="md" value={percentage} />
-      <Group>
+      <Group mb="md" align="flex-end">
         <TextInput
           value={searchTerm}
           onChange={handleSearchTermChange}
           placeholder="Search"
           sx={{ flexGrow: 1 }}
           icon={<IconSearch size={12} />}
+          label="Search"
           rightSection={
             <>
               {searchTerm.length !== 0 && (
@@ -68,7 +84,15 @@ const Files: React.FC<Props> = ({ maxFileSize, currentFileSize }) => {
             </>
           }
         />
+
         <Button>Upload File</Button>
+      </Group>
+      <Group direction="column" grow>
+        {filteredFiles.length === 0 ? (
+          <Text>No files found.</Text>
+        ) : (
+          filteredFiles.map((file) => <FileCard key={file.id} file={file} />)
+        )}
       </Group>
     </>
   );
