@@ -10,8 +10,16 @@ export const getFiles = async (): Promise<File[]> => {
   return files;
 };
 
+export const getFile = async (id: string): Promise<[fs.ReadStream, string]> => {
+  const files = await getFiles();
+  const file = files.find((file) => file.id === id);
+
+  const readStream = fs.createReadStream(path.join(filesPath, file.name));
+  return [readStream, file.name];
+};
+
 export const addFiles = async (newFiles: File[]): Promise<File[]> => {
-  const files: File[] = await fs.readJSON(filesListPath);
+  const files = await getFiles();
   const fileList = [...files, ...newFiles];
   await fs.writeJSON(filesListPath, fileList);
 

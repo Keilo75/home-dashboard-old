@@ -41,6 +41,10 @@ const FileCard: React.FC<FileCard> = ({ file, setFiles }) => {
     modal.close();
   };
 
+  const downloadFile = async () => {
+    window.open(`/api/files/download?id=${file.id}`);
+  };
+
   return (
     <>
       <Card className={classes.card} tabIndex={0} onClick={modal.show}>
@@ -73,7 +77,11 @@ const FileCard: React.FC<FileCard> = ({ file, setFiles }) => {
           >
             Delete
           </Button>
-          <Button color="teal" leftIcon={<IconDownload size={16} />}>
+          <Button
+            color="teal"
+            leftIcon={<IconDownload size={16} />}
+            onClick={downloadFile}
+          >
             Download
           </Button>
         </Group>
