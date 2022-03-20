@@ -13,4 +13,8 @@ export default createStyles((theme) => ({
     placeItems: 'center',
     backgroundColor: theme.colors.dark[5],
   },
+  image: {
+    width: '100%',
+    aspectRatio: '16 / 9',
+  },
 }));

@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { MantineProvider } from '@mantine/core';
 import React from 'react';
 import { Navigation } from 'components/shared/navigation/Navigation';
+import { NotificationsProvider } from '@mantine/notifications';
 
 export default function App(props: AppProps) {
   const { Component, pageProps } = props;
@@ -25,9 +26,11 @@ export default function App(props: AppProps) {
           colorScheme: 'dark',
         }}
       >
-        <Navigation>
-          <Component {...pageProps} />
-        </Navigation>
+        <NotificationsProvider>
+          <Navigation>
+            <Component {...pageProps} />
+          </Navigation>
+        </NotificationsProvider>
       </MantineProvider>
     </>
   );

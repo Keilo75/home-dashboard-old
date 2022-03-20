@@ -2,6 +2,7 @@ import {
   ActionIcon,
   Button,
   Group,
+  Modal,
   Progress,
   Radio,
   RadioGroup,
@@ -18,25 +19,35 @@ import React, { useMemo, useState } from 'react';
 import { File, maxFileSize } from 'models/file';
 import { getFiles } from 'lib/files/fileController';
 import FileCard from 'components/files/FileCard';
+import useModal from 'hooks/useModal';
+import UploadFileModal from 'components/files/UploadFileModal';
 
 interface Props {
-  files: File[];
+  currentFiles: File[];
   maxFileSize: number;
-  currentFileSize: number;
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const files = await getFiles();
-  const currentFileSize = files.reduce((acc, cur) => acc + cur.size, 0);
+  const currentFiles = await getFiles();
 
-  return { props: { maxFileSize, currentFileSize, files } };
+  return { props: { maxFileSize, currentFiles } };
 };
 
-const Files: React.FC<Props> = ({ maxFileSize, currentFileSize, files }) => {
+const Files: React.FC<Props> = ({ maxFileSize, currentFiles }) => {
+  const [files, setFiles] = useState<File[]>(currentFiles);
+
   const [searchTerm, setSearchTerm] = useState('');
   const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setSearchTerm(e.target.value);
   const clearSearchTerm = () => setSearchTerm('');
+  const [isUploading, setIsUploading] = useState(false);
+
+  const uploadFileModal = useModal();
+
+  const currentFileSize = useMemo(
+    () => files.reduce((acc, cur) => acc + cur.size, 0),
+    [files]
+  );
 
   const percentage = (currentFileSize / maxFileSize) * 100;
   const filteredFiles = useMemo(
@@ -85,7 +96,7 @@ const Files: React.FC<Props> = ({ maxFileSize, currentFileSize, files }) => {
           }
         />
 
-        <Button>Upload File</Button>
+        <Button onClick={uploadFileModal.show}>Upload File</Button>
       </Group>
       <Group direction="column" grow>
         {filteredFiles.length === 0 ? (
@@ -94,6 +105,22 @@ const Files: React.FC<Props> = ({ maxFileSize, currentFileSize, files }) => {
           filteredFiles.map((file) => <FileCard key={file.id} file={file} />)
         )}
       </Group>
+      <Modal
+        opened={uploadFileModal.opened}
+        onClose={uploadFileModal.close}
+        title="Upload File"
+        centered
+        withCloseButton={!isUploading}
+        closeOnClickOutside={!isUploading}
+        closeOnEscape={!isUploading}
+      >
+        <UploadFileModal
+          isUploading={isUploading}
+          setIsUploading={setIsUploading}
+          close={uploadFileModal.close}
+          setFiles={setFiles}
+        />
+      </Modal>
     </>
   );
 };

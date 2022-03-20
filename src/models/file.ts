@@ -1,10 +1,10 @@
 import path from 'path';
 
-type FileType = 'image' | 'video' | 'text' | 'unknown';
+export type FileType = 'image' | 'video' | 'text' | 'unknown';
 const FileTypeRecord: Record<FileType, string[]> = {
-  text: ['txt'],
-  video: ['mp4', 'mkv'],
-  image: ['jpg', 'jpeg', 'png'],
+  text: [],
+  video: [],
+  image: [],
   unknown: [],
 };
 
@@ -17,7 +17,11 @@ export const getFileType = (format: string): FileType => {
 };
 
 export const maxFileSize = 524288000;
-export const dataDir = path.join(process.cwd(), 'data');
+export const dataPath = path.join(process.cwd(), 'data');
+export const filesPath = path.join(dataPath, 'files');
+export const filesListPath = path.join(dataPath, 'files.json');
+
+export const publicPath = path.join(process.cwd(), 'public');
 
 export interface File {
   name: string;
