@@ -21,8 +21,8 @@ const FileCard: React.FC<FileCard> = ({ file }) => {
   );
 
   const fileType = useMemo(() => {
-    const format = file.name.split('.').at(-1);
-    return getFileType(format);
+    const format = file.name.split('.');
+    return getFileType(format[format.length - 1]);
   }, [file.name]);
 
   const deleteFile = () => {};
