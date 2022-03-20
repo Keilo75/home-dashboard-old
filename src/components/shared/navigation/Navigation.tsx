@@ -8,10 +8,10 @@ import {
   Text,
   useMantineTheme,
 } from '@mantine/core';
-import { IconDashboard, IconFiles, IconHome } from '@tabler/icons';
-import NavigationLink, { NavigationLinkProps } from './NavigationLink';
+import { IconDashboard, IconFiles, IconHome, IconLock } from '@tabler/icons';
+import NavigationLink, { INavigationLink } from './NavigationLink';
 
-const pages: NavigationLinkProps[] = [
+const pages: INavigationLink[] = [
   { label: 'Home', color: 'blue', icon: <IconHome size={16} />, url: '/' },
   {
     label: 'Files',
@@ -19,6 +19,7 @@ const pages: NavigationLinkProps[] = [
     icon: <IconFiles size={16} />,
     url: '/files',
   },
+  { label: 'Admin', color: 'red', icon: <IconLock size={16} />, url: '/admin' },
 ];
 
 export const Navigation: React.FC = ({ children }) => {
@@ -37,7 +38,11 @@ export const Navigation: React.FC = ({ children }) => {
           width={{ sm: 300, lg: 400 }}
         >
           {pages.map((page) => (
-            <NavigationLink key={page.label} {...page} />
+            <NavigationLink
+              key={page.label}
+              link={page}
+              setOpened={setOpened}
+            />
           ))}
         </Navbar>
       }

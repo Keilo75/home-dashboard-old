@@ -12,12 +12,12 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { IconSearch, IconX } from '@tabler/icons';
+import { IconSearch, IconUpload, IconX } from '@tabler/icons';
 import { GetServerSideProps } from 'next';
 import prettyBytes from 'pretty-bytes';
 import React, { useMemo, useState } from 'react';
 import { File, maxFileSize } from 'models/file';
-import { getFiles } from 'lib/files/fileController';
+import { getFiles } from 'lib/fileController';
 import FileCard from 'components/files/FileCard';
 import useModal from 'hooks/useModal';
 import UploadFileModal from 'components/files/UploadFileModal';
@@ -96,7 +96,12 @@ const Files: React.FC<Props> = ({ maxFileSize, currentFiles }) => {
           }
         />
 
-        <Button onClick={uploadFileModal.show}>Upload File</Button>
+        <Button
+          onClick={uploadFileModal.show}
+          leftIcon={<IconUpload size={16} />}
+        >
+          Upload File
+        </Button>
       </Group>
       <Group direction="column" grow>
         {filteredFiles.length === 0 ? (

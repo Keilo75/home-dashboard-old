@@ -1,7 +1,8 @@
 import formidable from 'formidable';
 import fs from 'fs-extra';
+import { filesListPath, filesPath } from 'models/paths';
 import path from 'path';
-import { File, filesListPath, filesPath } from 'src/models/file';
+import { File } from 'src/models/file';
 import { v4 as uuid } from 'uuid';
 
 export const getFiles = async (): Promise<File[]> => {
@@ -26,7 +27,12 @@ export const writeFiles = async (files: formidable.Files): Promise<File[]> => {
     const rawData = fs.readFileSync(file.filepath);
 
     fs.writeFileSync(path.join(filesPath, fileName), rawData);
-    newFiles.push({ id: uuid(), name: fileName, size: file.size });
+    newFiles.push({
+      id: uuid(),
+      name: fileName,
+      size: file.size,
+      timestamp: Date.now(),
+    });
   }
 
   const fileList = await addFiles(newFiles);

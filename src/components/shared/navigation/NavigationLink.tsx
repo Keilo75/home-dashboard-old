@@ -2,24 +2,25 @@ import { Group, Text, ThemeIcon, UnstyledButton } from '@mantine/core';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-export interface NavigationLinkProps {
+export interface INavigationLink {
   icon: React.ReactNode;
   color: string;
   label: string;
   url: string;
 }
 
-const NavigationLink: React.FC<NavigationLinkProps> = ({
-  icon,
-  color,
-  label,
-  url,
-}) => {
+interface NavigationLinkProps {
+  link: INavigationLink;
+  setOpened: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const NavigationLink: React.FC<NavigationLinkProps> = ({ link, setOpened }) => {
   const router = useRouter();
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    router.push(url);
+    setOpened(false);
+    router.push(link.url);
   };
 
   return (
@@ -42,10 +43,10 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
       onClick={handleClick}
     >
       <Group>
-        <ThemeIcon color={color} variant="light">
-          {icon}
+        <ThemeIcon color={link.color} variant="light">
+          {link.icon}
         </ThemeIcon>
-        <Text size="sm">{label}</Text>
+        <Text size="sm">{link.label}</Text>
       </Group>
     </UnstyledButton>
   );

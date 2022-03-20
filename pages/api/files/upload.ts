@@ -1,7 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 
 import formidable from 'formidable';
-import { writeFiles } from 'lib/files/fileController';
+import { writeFiles } from 'lib/fileController';
+import { logToAdminPanel } from 'lib/logController';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export const config = {
@@ -25,7 +26,11 @@ export default async function handler(
     });
 
     const fileList = await writeFiles(data);
-
+    logToAdminPanel({
+      type: 'upload',
+      message: `Uploaded file(s): ${Object.keys(data).join(', ')}`,
+      color: 'lime',
+    });
     res.status(200).json(fileList);
   } catch {
     res.status(500).json({});
