@@ -107,7 +107,9 @@ const Files: React.FC<Props> = ({ maxFileSize, currentFiles }) => {
         {filteredFiles.length === 0 ? (
           <Text>No files found.</Text>
         ) : (
-          filteredFiles.map((file) => <FileCard key={file.id} file={file} />)
+          filteredFiles.map((file) => (
+            <FileCard key={file.id} file={file} setFiles={setFiles} />
+          ))
         )}
       </Group>
       <Modal

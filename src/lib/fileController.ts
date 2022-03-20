@@ -18,6 +18,17 @@ export const addFiles = async (newFiles: File[]): Promise<File[]> => {
   return fileList;
 };
 
+export const deleteFile = async (id: string): Promise<[File[], string]> => {
+  const files = await getFiles();
+  const file = files.find((file) => file.id === id);
+
+  const newFiles = files.filter((file) => file.id !== id);
+  await fs.unlink(path.join(filesPath, file.name));
+
+  await fs.writeJSON(filesListPath, newFiles);
+  return [newFiles, file.name];
+};
+
 export const writeFiles = async (files: formidable.Files): Promise<File[]> => {
   const fileNames = Object.keys(files);
   const newFiles: File[] = [];

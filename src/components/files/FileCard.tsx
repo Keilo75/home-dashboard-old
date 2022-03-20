@@ -6,14 +6,18 @@ import useModal from 'hooks/useModal';
 import useStyles from './FileCard.styles';
 import FilePreview from './FilePreview';
 import { IconDownload, IconTrash } from '@tabler/icons';
+import axios from 'axios';
+import { useNotifications } from '@mantine/notifications';
 
 interface FileCard {
   file: File;
+  setFiles: React.Dispatch<React.SetStateAction<File[]>>;
 }
 
-const FileCard: React.FC<FileCard> = ({ file }) => {
+const FileCard: React.FC<FileCard> = ({ file, setFiles }) => {
   const { classes } = useStyles();
   const modal = useModal();
+  const notifications = useNotifications();
 
   const fileTimestamp = useMemo(
     () => new Date(file.timestamp).toLocaleString('de-DE'),
@@ -25,7 +29,17 @@ const FileCard: React.FC<FileCard> = ({ file }) => {
     return getFileType(format[format.length - 1]);
   }, [file.name]);
 
-  const deleteFile = () => {};
+  const deleteFile = async () => {
+    const response = await axios.delete(`/api/files/delete?id=${file.id}`);
+    setFiles(response.data);
+    notifications.showNotification({
+      title: 'Deleted file',
+      message: 'Succesfully deleted file',
+      color: 'lime',
+    });
+
+    modal.close();
+  };
 
   return (
     <>
@@ -52,7 +66,11 @@ const FileCard: React.FC<FileCard> = ({ file }) => {
           )}
         </Box>
         <Group position="right">
-          <Button color="red" leftIcon={<IconTrash size={16} />}>
+          <Button
+            color="red"
+            leftIcon={<IconTrash size={16} />}
+            onClick={deleteFile}
+          >
             Delete
           </Button>
           <Button color="teal" leftIcon={<IconDownload size={16} />}>

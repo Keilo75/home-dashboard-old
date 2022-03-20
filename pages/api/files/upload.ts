@@ -1,5 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-
 import formidable from 'formidable';
 import { writeFiles } from 'lib/fileController';
 import { logToAdminPanel } from 'lib/logController';

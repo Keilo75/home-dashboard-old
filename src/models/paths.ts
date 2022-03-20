@@ -1,6 +1,6 @@
 import path from 'path';
 
-export const dataPath = path.join(process.cwd(), 'data');
+export const dataPath = path.join(process.cwd(), '..', 'data');
 export const filesListPath = path.join(dataPath, 'files.json');
 export const logsPath = path.join(dataPath, 'logs.json');
 
