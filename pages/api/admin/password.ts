@@ -9,7 +9,7 @@ export default async function handler(
 
   if (req.query.p === password) {
     await logToAdminPanel({
-      type: 'login',
+      type: 'admin',
       message: 'Admin login detected.',
       color: 'blue',
     });
